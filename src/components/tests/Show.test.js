@@ -47,7 +47,7 @@ test('component renders when no seasons are selected and when rerenders with a s
     const list = screen.getAllByTestId("season-option");
     expect(list).toHaveLength(3)
     rerender(<Show handleSelect={mockHandleSelect} selectedSeason={1}/>);
-    expect(mockHandleSelect).toHaveBeenCalledTimes(2)
+    expect(list[1]).toHaveTextContent('2');
 });
 
 //Tasks:
