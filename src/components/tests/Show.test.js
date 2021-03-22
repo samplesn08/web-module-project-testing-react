@@ -1,26 +1,53 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
+import Select from 'react-select';
+import selectEvent from 'react-select-event'
 import Show from './../Show';
 
 const testShow = {
     //add in approprate test data structure here.
+    image: '',
+    name: '',
+    summary: '',
+    seasons: [{id: 1, name: '1', episodes: []}, {id: 2, name: '2', episodes: []}, {id: 3, name: '3', episodes: []}]
 }
 
 test('renders testShow and no selected Season without errors', ()=>{
+    const mockHandleSelect = jest.fn();
+    render(<Show show={testShow} handleSelect={mockHandleSelect} selectedSeason='none' />)
 });
 
 test('renders Loading component when prop show is null', () => {
+    render(<Show show={null}/>)
+    const loading = screen.getByTestId('loading-container');
+    expect(loading).toBeInTheDocument();
 });
 
 test('renders same number of options seasons are passed in', ()=>{
+    const mockHandleSelect = jest.fn();
+    render(<Show show={testShow} handleSelect={mockHandleSelect} selectedSeason='none'/>);
+    const seasonsSelect = screen.getAllByTestId('season-option')
+    const seasonsTest = testShow.seasons;
+    expect(seasonsSelect.length).toEqual(seasonsTest.length);
 });
 
-test('handleSelect is called when an season is selected', () => {
+test('handleSelect is called when an season is selected', async () => {
+    const mockHandleSelect = jest.fn();
+    render(<Show show ={testShow} handleSelect={mockHandleSelect} selectedSeason='none'/>);
+    const list = screen.getByTestId("seasons");
+    expect(list).toBeInTheDocument()
+    selectEvent.select(list, {target: list[1]})
+    expect(mockHandleSelect).toHaveBeenCalled();
 });
 
 test('component renders when no seasons are selected and when rerenders with a season passed in', () => {
+    const mockHandleSelect = jest.fn();
+    const { rerender } = render(<Show show={testShow} handleSelect={mockHandleSelect} selectedSeason='none'/>);
+    const list = screen.getAllByTestId("season-option");
+    expect(list).toHaveLength(3)
+    rerender(<Show handleSelect={mockHandleSelect} selectedSeason={1}/>);
+    expect(mockHandleSelect).toHaveBeenCalledTimes(2)
 });
 
 //Tasks:
