@@ -24,19 +24,19 @@ const testEpisodeWithoutImage = {
 }
 
 test("renders without error", () => {
-    // render(<Episode props={testEpisode} />);
+    render(<Episode episode={testEpisode} />);
 });
 
 test("renders the summury test passed as prop", ()=>{
-    // render(<Episode props={testEpisode} />);
-    // const summary = screen.getByText("This is the summary");
-    // expect(summary).toBeInTheDocument()
+    render(<Episode episode={testEpisode} />);
+    const summary = screen.getByText("This is the summary");
+    expect(summary).toBeInTheDocument()
 });
 
 test("renders default image when image is not defined", ()=>{
-    // render(<Episode props={testEpisodeWithoutImage} />);
-    // const alt = screen.getByAltText("./stranger_things.png");
-    // expect(alt).toBeInTheDocument()
+    render(<Episode episode={testEpisodeWithoutImage} />);
+    const alt = screen.getByAltText("./stranger_things.png");
+    expect(alt).toBeInTheDocument()
 })
 
 //Tasks
