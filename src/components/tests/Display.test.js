@@ -1,14 +1,25 @@
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
+import Display from '../Display';
 
+test('component renders without any props', () => {
+    render(<Display />);
+});
 
+test('displays Show component after fetch button is pressed', async () => {
 
+    await waitFor(() => expect())
+});
 
+test('after fetch, the number of select options is equal to the number of seasons in data', async () => {
 
+});
 
+test('correct function is called when fetch button is clicked', () => {
 
-
-
-
+});
 
 
 
