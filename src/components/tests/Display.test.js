@@ -39,15 +39,17 @@ test('after fetch, the number of select options is equal to the number of season
 });
 
 test('correct function is called when fetch button is clicked', async () => {
-    render(<Display />);
+    const mockDisplayFunc = jest.fn();
+    render(<Display displayFunc={mockDisplayFunc}/>);
     const mockFetchShow = fetchShow
     mockFetchShow.mockResolvedValueOnce({
         name: 'Stranger Things', image: 'image.url', summary: 'This is a Stranger Things sumary', seasons: [{}, {}]
     })
+    
     const button = screen.getByRole('button');
     userEvent.click(button);
     await waitFor(() => {
-        expect(mockFetchShow).toHaveBeenCalled() 
+        expect(mockDisplayFunc).toHaveBeenCalled() 
     })
 });
 

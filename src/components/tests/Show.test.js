@@ -6,16 +6,29 @@ import selectEvent from 'react-select-event'
 import Show from './../Show';
 
 const testShow = {
-    //add in approprate test data structure here.
-    image: '',
     name: '',
     summary: '',
-    seasons: [{id: 1, name: '1', episodes: []}, {id: 2, name: '2', episodes: []}, {id: 3, name: '3', episodes: []}]
+    seasons: [
+        {
+            id: 1, 
+            name: '1', 
+            episodes: []
+        }, 
+        {
+            id: 2, 
+            name: '2', 
+            episodes: []
+        }, 
+        {
+            id: 3, 
+            name: '3', 
+            episodes: []
+        }
+    ]
 }
 
 test('renders testShow and no selected Season without errors', ()=>{
-    const mockHandleSelect = jest.fn();
-    render(<Show show={testShow} handleSelect={mockHandleSelect} selectedSeason='none' />)
+    render(<Show show={testShow} selectedSeason='none' />)
 });
 
 test('renders Loading component when prop show is null', () => {
@@ -25,8 +38,7 @@ test('renders Loading component when prop show is null', () => {
 });
 
 test('renders same number of options seasons are passed in', ()=>{
-    const mockHandleSelect = jest.fn();
-    render(<Show show={testShow} handleSelect={mockHandleSelect} selectedSeason='none'/>);
+    render(<Show show={testShow} selectedSeason='none'/>);
     const seasonsSelect = screen.getAllByTestId('season-option')
     const seasonsTest = testShow.seasons;
     expect(seasonsSelect.length).toEqual(seasonsTest.length);
@@ -35,19 +47,19 @@ test('renders same number of options seasons are passed in', ()=>{
 test('handleSelect is called when an season is selected', async () => {
     const mockHandleSelect = jest.fn();
     render(<Show show ={testShow} handleSelect={mockHandleSelect} selectedSeason='none'/>);
-    const list = screen.getByTestId("seasons");
-    expect(list).toBeInTheDocument()
-    selectEvent.select(list, {target: list[1]})
+    const list = screen.getByLabelText(/select a season/i);
+    expect(list).toBeInTheDocument();
+    userEvent.selectOptions(list, ['1']);
     expect(mockHandleSelect).toHaveBeenCalled();
 });
 
 test('component renders when no seasons are selected and when rerenders with a season passed in', () => {
-    const mockHandleSelect = jest.fn();
-    const { rerender } = render(<Show show={testShow} handleSelect={mockHandleSelect} selectedSeason='none'/>);
-    const list = screen.getAllByTestId("season-option");
-    expect(list).toHaveLength(3)
-    rerender(<Show handleSelect={mockHandleSelect} selectedSeason={1}/>);
-    expect(list[1]).toHaveTextContent('2');
+    const { rerender } = render(<Show show={testShow} selectedSeason='none'/>);
+    let episodesList = screen.queryByTestId("episodes-container");
+    expect(episodesList).not.toBeInTheDocument();
+    rerender(<Show show={testShow} selectedSeason={1}/>);
+    episodesList = screen.queryByTestId('episodes-container');
+    expect(episodesList).toBeInTheDocument();
 });
 
 //Tasks:
