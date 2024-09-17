@@ -1,14 +1,57 @@
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import fetchShow from '../../api/fetchShow';
+import Display from '../Display';
 
+jest.mock('../../api/fetchShow');
 
+test('component renders without any props', () => {
+    render(<Display />);
+});
 
+test('displays Show component after fetch button is pressed', async () => {
+    render(<Display />);
+    const mockFetchShow = fetchShow
+    mockFetchShow.mockResolvedValueOnce({
+        name: 'Stranger Things', image: 'image.url', summary: 'This is a Stranger Things sumary', seasons: [{}, {}]
+    })
+    const button = screen.getByRole('button');
+    userEvent.click(button);
+    await waitFor(() => {
+        const h1 = screen.getByText('Stranger Things');
+        expect(h1).toBeInTheDocument();
+    })
+});
 
+test('after fetch, the number of select options is equal to the number of seasons in data', async () => {
+    render(<Display />);
+    const mockFetchShow = fetchShow;
+    mockFetchShow.mockResolvedValueOnce({
+        name: 'Stranger Things', image: 'image.url', summary: 'This is a Stranger Things sumary', seasons: [{}, {}]
+    })
+    const button = screen.getByRole('button');
+    userEvent.click(button);
+    await waitFor(() => {
+        const options = screen.getAllByTestId('season-option');
+        expect(options).toHaveLength(2)
+    })
+});
 
-
-
-
-
-
-
+test('correct function is called when fetch button is clicked', async () => {
+    const mockDisplayFunc = jest.fn();
+    render(<Display displayFunc={mockDisplayFunc}/>);
+    const mockFetchShow = fetchShow
+    mockFetchShow.mockResolvedValueOnce({
+        name: 'Stranger Things', image: 'image.url', summary: 'This is a Stranger Things sumary', seasons: [{}, {}]
+    })
+    
+    const button = screen.getByRole('button');
+    userEvent.click(button);
+    await waitFor(() => {
+        expect(mockDisplayFunc).toHaveBeenCalled() 
+    })
+});
 
 
 
